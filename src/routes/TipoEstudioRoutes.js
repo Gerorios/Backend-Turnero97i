@@ -1,15 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const {
-  getTipoEstudios,
+  getTipoEstudio,
   getOneTipoEstudio,
   createTipoEstudio,
   updateTipoEstudio,
   deleteTipoEstudio,
-} = require('../controllers/tipoEstudioController');
+} = require('../controllers/TipoEstudioController');
 
 // Ruta para obtener todos los tipos de estudios con paginación
-router.get('/tipo-estudios', getTipoEstudios);
+router.get('/tipo-estudios', getTipoEstudio);
 
 // Ruta para obtener un tipo de estudio por nombre
 router.get('/tipo-estudios/:estudio', getOneTipoEstudio);

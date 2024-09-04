@@ -12,6 +12,9 @@ class Server {
 
   routes() {
     // this.app.use(isJsonMiddleware); PREGUNTAR
+    this.app.use("/api", require("../routes/UserRoutes.js"));
+    this.app.use("/api", require("../routes/AppointmentRoutes.js"));
+    this.app.use("/api", require("../routes/TipoEstudioRoutes.js"));
   }
 
   middlewares() {

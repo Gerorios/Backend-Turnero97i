@@ -3,7 +3,7 @@ const AppointmentModel = require("../models/AppointmentSchema"); // Importamos e
 const TipoEstudioModel = require("../models/TipoEstudioSchema"); // Importamos el modelo de TipoEstudio
 const JWT = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const recoveryPassMsg = require("../middlewares/user/updateUser/recoveryPass");
+const recoveryPassMsg = require("../middlewares/recoverPass");
 
 // Obtener todos los usuarios
 const getAllUsers = async (req, res) => {
@@ -166,7 +166,7 @@ const recoveryPass = async (req, res) => {
     };
 
     const token = JWT.sign(payload, process.env.JWT_SECRETPASS);
-    const response = await recoveryPassMsg(token, req.body.email);
+    const response = await recoveryPassMsg(token, email);
 
     if (response === 200) {
       res.status(200).json({ msg: "An email has been sended to your account" });
