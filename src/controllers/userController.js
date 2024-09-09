@@ -32,9 +32,8 @@ const getOneUser = async (req, res) => {
   try {
     const user = await UserModel.findOne({ username })
       .select("-password -_id")
-      .populate("plan", "name");
     if (!user) {
-      return res.status(404).send({ message: "User not found" });
+      return res.status(404).send({ message: "User not founaad" });
     }
     res.send(user);
   } catch (error) {
@@ -51,7 +50,7 @@ const updateUser = async (req, res) => {
     });
 
     if (!update) {
-      return res.status(404).json({ msg: "User not found" });
+      return res.status(404).json({ msg: "User not founda" });
     }
 
     console.log(update);
@@ -212,8 +211,9 @@ const getMedicoAppointments = async (req, res) => {
   try {
     const medicoId = req.params.id;
     const appointments = await AppointmentModel.find({ medico: medicoId })
-      .populate("user", "first_name last_name")
-      .populate("tipoEstudio", "name");
+      .populate("user", "name last_name")
+      .populate("tipoEstudio", "name")
+      .select("name tipoEstudio");
 
     if (!appointments) {
       return res.status(404).json({ msg: "Appointments not found" });
@@ -224,6 +224,7 @@ const getMedicoAppointments = async (req, res) => {
     res.status(500).json({ msg: "Error: Server", error });
   }
 };
+
 const getAllMedicos = async (req, res) => {
   try {
     const numeroPagina = req.query.numeroPagina || 0;

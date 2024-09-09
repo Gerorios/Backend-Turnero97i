@@ -17,8 +17,17 @@ const UserSchema = new Schema({
         required: true,
     },
 
-//   first_name: String,
-//   last_name: String,
+    name: {
+        type: String,
+        required: true,
+        match: [/^[a-zA-Z]+$/, 'Porfavor llena un nombre valido'],
+    },
+    
+    last_name: {
+        type: String,
+        required: true,
+        match: [/^[a-zA-Z]+$/, 'Porfavor llena un apellido valido'],
+    },
 
     phone_number: {
         type: String,
@@ -30,10 +39,6 @@ const UserSchema = new Schema({
         enum: ["usuario", "medico", "admin"],
         default: "usuario",
     },
-//   plan: {
-//     type: Schema.Types.ObjectId,
-//     ref: "Plan",
-//   },
 
     pfp: {
         type: String,
