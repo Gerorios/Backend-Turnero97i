@@ -104,13 +104,12 @@ const deleteUserById = async (req, res) => {
 const registerUser = async (req, res) => {
   try {
     const newUser = new UserModel(req.body);
-
-    let salt = bcrypt.genSaltSync(10);
+    const salt = bcrypt.genSaltSync(10); // Aumentar la sal puede ser más seguro, ajusta según tu necesidad
     newUser.password = bcrypt.hashSync(req.body.password, salt);
 
     await newUser.save();
 
-    res.status(201).json({ msg: "Usuario creado con exito", newUser });
+    res.status(201).json({ msg: "Usuario creado con éxito", newUser });
   } catch (error) {
     console.log(error);
     res.status(500).json({ msg: "Error: Server", error });
@@ -118,29 +117,27 @@ const registerUser = async (req, res) => {
 };
 
 // Iniciar sesión de usuario
+// Iniciar sesión de usuario
 const loginUser = async (req, res) => {
   try {
-    const { username } = req.body;
+    const { username, password } = req.body;
 
     const user = await UserModel.findOne({ username });
+    if (!user || !bcrypt.compareSync(password, user.password)) {
+      return res.status(401).json({ msg: "Credenciales inválidas" });
+    }
 
+    // Minimizar el payload del token
     const payload = {
-      user: {
-        idUser: user._id,
-        role: user.role,
-        email: user.email,
-        phone_number: user.phone_number,
-        pfp: user.pfp,
-      },
+      idUser: user._id,
+      role: user.role,
     };
 
-    const token = JWT.sign(payload, process.env.JWT_SECRETPASS);
-    console.log(token);
+    const token = JWT.sign(payload, process.env.JWT_SECRETPASS, { expiresIn: '1h' }); // Establecer tiempo de expiración puede ser útil
 
-    const role = user.role;
-
-    res.status(200).json({ msg: "Usuario Logueado", token, role});
+    res.status(200).json({ msg: "Usuario Logueado", token, role: user.role });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ msg: "Error: Server", error });
   }
 };

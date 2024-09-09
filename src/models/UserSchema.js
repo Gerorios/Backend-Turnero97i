@@ -25,13 +25,11 @@ const UserSchema = new Schema({
         match: [/^\d+$/],
         required: true,
     },
-    
     role: {
         type: String,
         enum: ["usuario", "medico", "admin"],
         default: "usuario",
     },
-
 //   plan: {
 //     type: Schema.Types.ObjectId,
 //     ref: "Plan",
@@ -40,7 +38,6 @@ const UserSchema = new Schema({
     pfp: {
         type: String,
     },
-
 });
 
 const UserModel = model("User", UserSchema);

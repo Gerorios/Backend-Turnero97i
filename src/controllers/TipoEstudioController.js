@@ -22,9 +22,9 @@ const getTipoEstudio = async (req, res) => {
 };
 
 const getOneTipoEstudio = async (req, res) => {
-  const { estudio } = req.params;
+  const { name } = req.params;
   try {
-    const tipoestudio = await TipoEstudio.findOne({ estudio }).select("-_id");
+    const tipoestudio = await TipoEstudio.findOne({ name }).select("-_id");
 
     if (!tipoestudio) {
       return res.status(404).send({ message: "Estudio not found" });
@@ -36,9 +36,9 @@ const getOneTipoEstudio = async (req, res) => {
 };
 
 const createTipoEstudio = async (req, res) => {
-  const { estudio, descripcion } = req.body;
+  const { name, descripcion } = req.body;
   try {
-    const newTipoEstudio = new TipoEstudio({ estudio, descripcion });
+    const newTipoEstudio = new TipoEstudio({ name, descripcion });
     await newTipoEstudio.save();
     res.status(201).json({ msg: "Tipo de estudio creado", newTipoEstudio });
   } catch (error) {
@@ -49,11 +49,11 @@ const createTipoEstudio = async (req, res) => {
 
 // Actualizar un tipo de estudio
 const updateTipoEstudio = async (req, res) => {
-  const { estudio } = req.params;
+  const { name } = req.params;
   const { descripcion } = req.body;
   try {
     const updatedTipoEstudio = await TipoEstudio.findOneAndUpdate(
-      { estudio },
+      { name },
       { descripcion },
       { new: true }
     );
@@ -73,9 +73,9 @@ const updateTipoEstudio = async (req, res) => {
 
 // Eliminar un tipo de estudio
 const deleteTipoEstudio = async (req, res) => {
-  const { estudio } = req.params;
+  const { name } = req.params;
   try {
-    const deletedTipoEstudio = await TipoEstudio.findOneAndDelete({ estudio });
+    const deletedTipoEstudio = await TipoEstudio.findOneAndDelete({ name });
 
     if (!deletedTipoEstudio) {
       return res.status(404).send({ message: "Estudio not found" });

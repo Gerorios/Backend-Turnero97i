@@ -17,10 +17,9 @@ const AppointmentSchema = new Schema({
     ref: "User",
     required: true,
   },
-  telefono: { 
-  type: String, required: true },
   message: {
-  type: String, required: true, },
+  type: String, required: true,
+ },
 
 });
 
