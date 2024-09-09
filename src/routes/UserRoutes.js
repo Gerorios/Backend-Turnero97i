@@ -12,6 +12,7 @@ const {
   changePass,
   getUserAppointments,
   getMedicoAppointments,
+  getAllMedicos,
 } = require("../controllers/userController");
 
 // Ruta para obtener todos los usuarios
@@ -47,4 +48,6 @@ router.get("/:id/appointments", getUserAppointments);
 // Ruta para obtener todos los turnos asignados a un médico
 router.get("/medico/:id/appointments", getMedicoAppointments);
 
+//Ruta para traer todo los medicos
+router.get('/api/medicos', getAllMedicos);
 module.exports = router;

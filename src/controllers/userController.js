@@ -71,7 +71,7 @@ const deleteUserByUsername = async (req, res) => {
 
     const userResponse = {
       _id: user._id,
-      username: user.username,
+     email:user.email,
     };
 
     res
@@ -89,7 +89,7 @@ const deleteUserById = async (req, res) => {
 
     const userResponse = {
       _id: user._id,
-      username: user.username,
+     email:user.email,
     };
 
     res
@@ -128,10 +128,7 @@ const loginUser = async (req, res) => {
       user: {
         idUser: user._id,
         role: user.role,
-        username: user.username,
         email: user.email,
-        first_name: user.first_name,
-        last_name: user.last_name,
         phone_number: user.phone_number,
         pfp: user.pfp,
       },
@@ -160,7 +157,7 @@ const recoveryPass = async (req, res) => {
     const payload = {
       user: {
         idUser: user._id,
-        username: user.username,
+       email:user.email,
         role: user.role,
       },
     };
@@ -230,7 +227,26 @@ const getMedicoAppointments = async (req, res) => {
     res.status(500).json({ msg: "Error: Server", error });
   }
 };
+const getAllMedicos = async (req, res) => {
+  try {
+    const numeroPagina = req.query.numeroPagina || 0;
+    const limite = req.query.limite || 8;
 
+    // Buscar usuarios con el rol de "medico"
+    const [medicos, count] = await Promise.all([
+      UserModel.find({ role: "medico" })
+        .select("-password")
+        .skip(numeroPagina * limite)
+        .limit(limite),
+      UserModel.countDocuments({ role: "medico" }),
+    ]);
+
+    res.status(200).json({ msg: "All medicos: ", medicos, count, limite });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "Error: Server", error });
+  }
+};
 module.exports = {
   getAllUsers,
   getOneUser,
@@ -243,4 +259,5 @@ module.exports = {
   changePass,
   getUserAppointments, // Nuevo método para obtener los turnos de un usuario
   getMedicoAppointments, // Nuevo método para obtener los turnos de un médico
+  getAllMedicos,
 };
