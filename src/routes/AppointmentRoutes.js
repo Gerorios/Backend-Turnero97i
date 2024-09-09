@@ -16,12 +16,12 @@ router.get("/", getAllAppointments);
 router.get("/:id", getAppointmentById);
 
 // Ruta para crear una nueva cita
-router.post("/", createAppointment);
+router.post("/",auth(["user","admin"]),createAppointment);
 
 // Ruta para actualizar una cita por ID
 router.put("/:id", updateAppointment);
 
 // Ruta para eliminar una cita por ID
-router.delete("/:id",auth(["user","admin"]) ,deleteAppointment);
+router.delete("/:id",deleteAppointment);
 
 module.exports = router;
