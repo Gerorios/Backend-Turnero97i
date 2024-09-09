@@ -10,18 +10,18 @@ const {
 const auth = require('../middlewares/auth');
 
 // Ruta para obtener todas las citas
-router.get("/", getAllAppointments);
+router.get("/getAppointments", getAllAppointments);
 
 // Ruta para obtener una cita por ID
-router.get("/:id", getAppointmentById);
+router.get("/Appointments/:id", getAppointmentById);
 
 // Ruta para crear una nueva cita
-router.post("/",auth(["user","admin"]),createAppointment);
+router.post("/createAppointments",auth(["user","admin"]),createAppointment);
 
 // Ruta para actualizar una cita por ID
-router.put("/:id", auth(["user", "admin"]),updateAppointment);
+router.put("/UpdateAppointments/:id", auth(["user", "admin"]),updateAppointment);
 
 // Ruta para eliminar una cita por ID
-router.delete("/:id",auth(["admin"]),deleteAppointment);
+router.delete("/DeleteAppointment/:id",auth(["admin"]),deleteAppointment);
 
 module.exports = router;
