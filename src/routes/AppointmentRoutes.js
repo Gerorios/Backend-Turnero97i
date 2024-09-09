@@ -7,6 +7,7 @@ const {
   updateAppointment,
   deleteAppointment,
 } = require("../controllers/AppointmentController");
+const auth = require('../middlewares/authMiddleware');
 
 // Ruta para obtener todas las citas
 router.get("/", getAllAppointments);
@@ -21,6 +22,6 @@ router.post("/", createAppointment);
 router.put("/:id", updateAppointment);
 
 // Ruta para eliminar una cita por ID
-router.delete("/:id", deleteAppointment);
+router.delete("/:id",auth(["user","admin"]) ,deleteAppointment);
 
 module.exports = router;
