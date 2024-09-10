@@ -17,7 +17,7 @@ router.get("/getAllAppointments" , getAllAppointments);
 router.get("/Appointments/:id", getAppointmentById);
 
 // Ruta para crear una nueva cita
-router.post("/createAppointments",auth(["usuario","admin"]),createAppointment);
+router.post("/createAppointments",createAppointment);
 
 // Ruta para actualizar una cita por ID
 router.put("/UpdateAppointments/:id", auth(["usuario", "admin"]),updateAppointment);

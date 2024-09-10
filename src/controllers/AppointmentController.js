@@ -40,12 +40,14 @@ const getAppointmentById = async (req, res) => {
 // Crear una nueva cita
 const createAppointment = async (req, res) => {
   try {
+    console.log(req.body); // Agrega este console.log para ver qué datos están llegando
+
     const newAppointment = new AppointmentModel(req.body);
     await newAppointment.save();
 
     res.status(201).json({ msg: "Appointment created successfully", newAppointment });
   } catch (error) {
-    console.log(error);
+    console.log(error);  // Asegúrate de ver el error exacto en la consola
     res.status(500).json({ msg: "Error: Server", error });
   }
 };

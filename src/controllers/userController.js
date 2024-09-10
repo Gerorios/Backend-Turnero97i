@@ -105,9 +105,10 @@ const registerUser = async (req, res) => {
 // Iniciar sesión de usuario
 const loginUser = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
-    const user = await UserModel.findOne({ username });
+    // Verificar si el usuario existe por email
+    const user = await UserModel.findOne({ email });
     if (!user || !bcrypt.compareSync(password, user.password)) {
       return res.status(401).json({ msg: "Credenciales inválidas" });
     }
@@ -118,12 +119,14 @@ const loginUser = async (req, res) => {
       role: user.role,
     };
 
-    const token = JWT.sign(payload, process.env.JWT_SECRETPASS, { expiresIn: '1h' }); // Establecer tiempo de expiración puede ser útil
+    // Crear el token
+    const token = JWT.sign(payload, process.env.JWT_SECRETPASS, { expiresIn: '1h' });
 
+    // Responder con el token y el rol del usuario
     res.status(200).json({ msg: "Usuario Logueado", token, role: user.role });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ msg: "Error: Server", error });
+    res.status(500).json({ msg: "Error del servidor", error });
   }
 };
 
