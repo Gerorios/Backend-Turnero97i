@@ -8,8 +8,13 @@ const AppointmentSchema = new Schema({
     ref: "TipoEstudio",
     required: true,
   },
-  medico: { type: Schema.Types.ObjectId, ref: "Medico", required: true },
-  message: { type: String, required: true },
+  medico: {
+   type: Schema.Types.ObjectId,
+   ref: "Medico",
+   required: true },
+  message: { 
+  type: String,
+  required: true },
   fecha: { type: Date, required: true },
 });
 

@@ -4,7 +4,6 @@ const TipoEstudioModel = require("../models/TipoEstudioSchema"); // Importamos e
 const JWT = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const recoveryPassMsg = require("../middlewares/recoverPass");
-const { Db } = require("mongodb");
 
 // Obtener todos los usuarios
 const getAllUsers = async (req, res) => {
@@ -101,29 +100,36 @@ const registerUser = async (req, res) => {
   }
 };
 
-// Iniciar sesión de usuario
+
 // Iniciar sesión de usuario
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-
     // Verificar si el usuario existe por email
     const user = await UserModel.findOne({ email });
     if (!user || !bcrypt.compareSync(password, user.password)) {
       return res.status(401).json({ msg: "Credenciales inválidas" });
     }
-
     // Minimizar el payload del token
     const payload = {
       idUser: user._id,
       role: user.role,
     };
-
+    
     // Crear el token
     const token = JWT.sign(payload, process.env.JWT_SECRETPASS, { expiresIn: '1h' });
-
     // Responder con el token y el rol del usuario
-    res.status(200).json({ msg: "Usuario Logueado", token, role: user.role });
+    res.status(200).json({ 
+      msg: "Usuario Logueado", 
+      token, 
+      role: user.role,
+      user: {  // Devuelve también los datos que necesitas en el frontend
+        name: user.name,
+        email: user.email,
+        idUser: user._id
+      } 
+    });
+    
   } catch (error) {
     console.error(error);
     res.status(500).json({ msg: "Error del servidor", error });

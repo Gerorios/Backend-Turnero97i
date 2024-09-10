@@ -40,7 +40,7 @@ const getAppointmentById = async (req, res) => {
 // Crear una nueva cita
 const createAppointment = async (req, res) => {
   try {
-    console.log(req.body); // Agrega este console.log para ver qué datos están llegando
+    console.log(req.body); // Verificar qué datos están llegando desde el front
 
     const newAppointment = new AppointmentModel(req.body);
     await newAppointment.save();
@@ -51,6 +51,7 @@ const createAppointment = async (req, res) => {
     res.status(500).json({ msg: "Error: Server", error });
   }
 };
+
 
 // Actualizar una cita por ID
 const updateAppointment = async (req, res) => {
