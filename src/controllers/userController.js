@@ -4,6 +4,7 @@ const TipoEstudioModel = require("../models/TipoEstudioSchema"); // Importamos e
 const JWT = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const recoveryPassMsg = require("../middlewares/recoverPass");
+const { Db } = require("mongodb");
 
 // Obtener todos los usuarios
 const getAllUsers = async (req, res) => {
@@ -22,22 +23,6 @@ const getAllUsers = async (req, res) => {
     res.status(200).json({ msg: "All users:  ", getUsers, count, limite});
   } catch (error) {
     console.log(error);
-    res.status(500).json({ msg: "Error: Server", error });
-  }
-};
-
-// Obtener un usuario por username
-const getOneUser = async (req, res) => {
-  const { username } = req.params;
-  try {
-    const user = await UserModel.findOne({ username })
-      .select("-password -_id")
-      .populate("plan", "name");
-    if (!user) {
-      return res.status(404).send({ message: "User not found" });
-    }
-    res.send(user);
-  } catch (error) {
     res.status(500).json({ msg: "Error: Server", error });
   }
 };
@@ -224,29 +209,38 @@ const getMedicoAppointments = async (req, res) => {
     res.status(500).json({ msg: "Error: Server", error });
   }
 };
+
+
 const getAllMedicos = async (req, res) => {
   try {
-    const numeroPagina = req.query.numeroPagina || 0;
-    const limite = req.query.limite || 8;
+    const numeroPagina = parseInt(req.query.numeroPagina, 10) || 0;
+    const limite = parseInt(req.query.limite, 10) || 8;
 
-    // Buscar usuarios con el rol de "medico"
+    // Busca todos los usuarios con el rol "medico"
     const [medicos, count] = await Promise.all([
-      UserModel.find({ role: "medico" })
-        .select("-password")
+      UserModel.find({ role: "medico" })  // Búsqueda insensible a mayúsculas
+        .select('-password')  // Excluir la contraseña
         .skip(numeroPagina * limite)
         .limit(limite),
-      UserModel.countDocuments({ role: "medico" }),
+      UserModel.countDocuments({ role: "medico" })
     ]);
+    
+    console.log(medicos);
+    if (!medicos || medicos.length === 0) {
+      return res.status(404).json({ msg: "User not found" });  // Enviar 404 si no encuentra
+    }
 
-    res.status(200).json({ msg: "All medicos: ", medicos, count, limite });
+    res.status(200).json({ medicos, count, limite });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: "Error: Server", error });
+    console.error("Error fetching medicos:", error);
+    res.status(500).json({ msg: "Server error", error });
   }
 };
+
+
+
 module.exports = {
   getAllUsers,
-  getOneUser,
   updateUser,
   deleteUserById,
   deleteUserByUsername,

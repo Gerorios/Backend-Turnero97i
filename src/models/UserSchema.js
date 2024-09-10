@@ -1,6 +1,4 @@
 const { Schema, model, mongoose } = require("mongoose");
-
-
 const UserSchema = new Schema({
     
     email: {
@@ -30,11 +28,6 @@ const UserSchema = new Schema({
         enum: ["usuario", "medico", "admin"],
         default: "usuario",
     },
-//   plan: {
-//     type: Schema.Types.ObjectId,
-//     ref: "Plan",
-//   },
-
     pfp: {
         type: String,
     },

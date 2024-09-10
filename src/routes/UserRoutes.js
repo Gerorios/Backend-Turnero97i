@@ -18,8 +18,6 @@ const {
 // Ruta para obtener todos los usuarios
 router.get("/", getAllUsers);
 
-// Ruta para obtener un usuario por username
-router.get("/:username", getOneUser);
 
 // Ruta para actualizar un usuario por ID
 router.put("/update/:id", updateUser);
@@ -49,5 +47,7 @@ router.get("/:id/appointments", getUserAppointments);
 router.get("/medico/:id/appointments", getMedicoAppointments);
 
 //Ruta para traer todo los medicos
-router.get('/api/medicos', getAllMedicos);
+router.get("/medicos", getAllMedicos);
+
+
 module.exports = router;
