@@ -1,18 +1,19 @@
 const express = require("express");
-const router = express.Router();
 const AppointmentModel = require("../models/AppointmentSchema");
 
 // Obtener todas las citas (appointments)
 const getAllAppointments = async (req, res) => {
   try {
     const appointments = await AppointmentModel.find()
-      .populate("user", "first_name last_name email")
+      .populate("user", "name last_name email")
       .populate("tipoEstudio", "name")
-      .populate("medico", "first_name last_name email");
+      .populate("medico", "name last_name email");
 
-    res.status(200).json({ msg: "All appointments", appointments });
+    console.log("Appointments fetched:", appointments);
+
+    res.status(200).json({ msg: "All appointments", appointments: appointments });
   } catch (error) {
-    console.log(error);
+    console.log("Error fetching appointments:", error);
     res.status(500).json({ msg: "Error: Server", error });
   }
 };
