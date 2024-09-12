@@ -126,7 +126,8 @@ const loginUser = async (req, res) => {
       user: {  // Devuelve también los datos que necesitas en el frontend
         name: user.name,
         email: user.email,
-        idUser: user._id
+        idUser: user._id,
+        role: user.role,
       } 
     });
     
