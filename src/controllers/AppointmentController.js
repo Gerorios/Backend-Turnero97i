@@ -1,22 +1,20 @@
 const express = require("express");
 const AppointmentModel = require("../models/AppointmentSchema");
 
-// Obtener todas las citas (appointments)
 const getAllAppointments = async (req, res) => {
   try {
     const appointments = await AppointmentModel.find()
-      .populate("user", "name last_name email")
-      .populate("tipoEstudio", "name")
-      .populate("medico", "name last_name email");
-
-    console.log("Appointments fetched:", appointments);
+      .populate("user", "name last_name email")  // Popula información del usuario (paciente)
+      .populate("medico", "name last_name email")  // Popula información del médico (desde el modelo "User")
+      .populate("tipoEstudio", "name");  // Popula información sobre el tipo de estudio
 
     res.status(200).json({ msg: "All appointments", appointments: appointments });
   } catch (error) {
-    console.log("Error fetching appointments:", error);
+    console.error("Error fetching appointments:", error);
     res.status(500).json({ msg: "Error: Server", error });
   }
 };
+
 
 // Obtener una cita por ID
 const getAppointmentById = async (req, res) => {
@@ -89,6 +87,29 @@ const deleteAppointment = async (req, res) => {
   }
 };
 
+//Controlador para aceptar/rechazar citas
+const updateAppointmentStatus = async (req, res) => {
+  const { id } = req.params;
+  const { estado } = req.body; // 'aceptado' o 'rechazado'
+
+  if (!['aceptado', 'rechazado'].includes(estado)) {
+    return res.status(400).json({ msg: "Estado no válido" });
+  }
+
+  try {
+    const appointment = await AppointmentModel.findByIdAndUpdate(id, { estado }, { new: true });
+    
+    if (!appointment) {
+      return res.status(404).json({ msg: "Cita no encontrada" });
+    }
+
+    res.status(200).json({ msg: `Cita ${estado}`, appointment });
+  } catch (error) {
+    console.log("Error updating appointment status:", error);
+    res.status(500).json({ msg: "Error: Server", error });
+  }
+};
+
 // Exportar los controladores
 module.exports = {
   getAllAppointments,
@@ -96,4 +117,5 @@ module.exports = {
   createAppointment,
   updateAppointment,
   deleteAppointment,
+  updateAppointmentStatus,
 };

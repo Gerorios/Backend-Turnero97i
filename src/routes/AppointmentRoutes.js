@@ -6,13 +6,15 @@ const {
   createAppointment,
   updateAppointment,
   deleteAppointment,
+  updateAppointmentStatus
 } = require("../controllers/AppointmentController");
 
 const auth = require('../middlewares/auth');
 
 // Ruta para obtener todas las citas
 router.get("/getAllAppointments" , getAllAppointments);
-
+//Ruta de rechazo o aceptacion de turno
+router.patch('/appointments/:id', updateAppointmentStatus);
 // Ruta para obtener una cita por ID
 router.get("/Appointments/:id", getAppointmentById);
 

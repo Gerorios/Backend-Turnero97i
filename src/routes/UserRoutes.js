@@ -13,11 +13,11 @@ const {
   getUserAppointments,
   getMedicoAppointments,
   getAllMedicos,
+  changeUserRole,
 } = require("../controllers/userController");
 
 // Ruta para obtener todos los usuarios
-router.get("/", getAllUsers);
-
+router.get("/getAllUsers", getAllUsers);
 
 // Ruta para actualizar un usuario por ID
 router.put("/update/:id", updateUser);
@@ -48,6 +48,7 @@ router.get("/medico/:id/appointments", getMedicoAppointments);
 
 //Ruta para traer todo los medicos
 router.get("/medicos", getAllMedicos);
-
+//Ruta para cambiar de rol
+router.put('/userRoleChange/:id', changeUserRole);
 
 module.exports = router;

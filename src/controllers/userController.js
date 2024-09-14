@@ -9,22 +9,32 @@ const recoveryPassMsg = require("../middlewares/recoverPass");
 const getAllUsers = async (req, res) => {
   try {
     console.log(req.query);
-    const numeroPagina = req.query.numeroPagina || 0;
-    const limite = req.query.limite || 8;
+
+    // Validar y ajustar `numeroPagina` para que sea un número entero positivo
+    const numeroPagina = parseInt(req.query.numeroPagina, 10) || 0;
+    const limite = parseInt(req.query.limite, 10) || 8;
+
+    // Asegurarse de que `numeroPagina` no sea menor que 0
+    const pagina = Math.max(numeroPagina, 0);
+    const limiteValidado = Math.max(limite, 1); // Asegurarse de que el límite sea al menos 1
 
     const [getUsers, count] = await Promise.all([
       UserModel.find()
         .select("-password")
-        .skip(numeroPagina * limite)
-        .limit(limite),
+        .skip(pagina * limiteValidado)
+        .limit(limiteValidado),
       UserModel.countDocuments(),
     ]);
-    res.status(200).json({ msg: "All users:  ", getUsers, count, limite});
+
+    res.status(200).json({ msg: "All users:  ", getUsers, count, limite: limiteValidado });
   } catch (error) {
     console.log(error);
     res.status(500).json({ msg: "Error: Server", error });
   }
 };
+
+
+
 
 // Actualizar un usuario por ID
 const updateUser = async (req, res) => {
@@ -209,7 +219,8 @@ const getMedicoAppointments = async (req, res) => {
     const appointments = await AppointmentModel.find({ medico: medicoId })
       .populate("user", "name last_name")
       .populate("tipoEstudio", "name")
-      .select("name tipoEstudio");
+      .select("fecha hora")  // Ajusta los campos que realmente tienes en tu modelo de Appointment
+
 
     if (!appointments) {
       return res.status(404).json({ msg: "Appointments not found" });
@@ -247,6 +258,36 @@ const getAllMedicos = async (req, res) => {
   }
 };
 
+//Metodo para cambiar el role del usuario - (USADO SOLO POR UN ADMIN)
+const changeUserRole = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { role } = req.body;
+
+    // Validar que el rol sea válido (user o medico)
+    if (!['usuario', 'medico'].includes(role)) {
+      return res.status(400).json({ msg: 'Rol inválido' });
+    }
+
+    // Actualizar el rol del usuario
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      id,
+      { role },
+      { new: true }
+    ).select('-password');
+
+    if (!updatedUser) {
+      return res.status(404).json({ msg: 'Usuario no encontrado' });
+    }
+
+    res.status(200).json({ msg: 'Rol actualizado correctamente', user: updatedUser });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: 'Error en el servidor', error });
+  }
+};
+
+
 
 
 module.exports = {
@@ -261,4 +302,5 @@ module.exports = {
   getUserAppointments, // Nuevo método para obtener los turnos de un usuario
   getMedicoAppointments, // Nuevo método para obtener los turnos de un médico
   getAllMedicos,
+  changeUserRole,
 };
