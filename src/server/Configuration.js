@@ -22,7 +22,7 @@ class Server {
     this.app.use(express.urlencoded({ extended: true }));
     // Configuración de CORS
     const corsOptions = {
-      origin: "https://prosaludproyecto.netlify.app/", // Reemplaza con el origen correcto de tu frontend
+      origin: "https://prosaludproyecto.netlify.app", // Reemplaza con el origen correcto de tu frontend
       credentials: true, // Permite incluir cookies en las solicitudes (necesario para el modo credentials: 'include')
     };
 
