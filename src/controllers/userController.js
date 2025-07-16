@@ -110,6 +110,8 @@ const registerUser = async (req, res) => {
   }
 };
 
+//hola
+
 
 // Iniciar sesión de usuario
 const loginUser = async (req, res) => {
