@@ -15,17 +15,16 @@ const UserSchema = new Schema({
         required: true,
     },
 
-    name: {
-        type: String,
-        required: true,
-        match: [/^[a-zA-Z]+$/, 'Porfavor llena un nombre valido'],
-    },
-    
-    last_name: {
-        type: String,
-        required: true,
-        match: [/^[a-zA-Z]+$/, 'Porfavor llena un apellido valido'],
-    },
+  name: {
+    type: String,
+    required: true,
+    match: [/^[\p{L}\s]+$/u, 'Porfavor llena un nombre valido'],
+  },
+  last_name: {
+    type: String,
+    required: true,
+    match: [/^[\p{L}\s]+$/u, 'Porfavor llena un apellido valido'],
+  },
 
     phone_number: {
         type: String,
@@ -36,10 +35,6 @@ const UserSchema = new Schema({
         type: String,
         enum: ["usuario", "medico", "admin"],
         default: "usuario",
-    },
-
-    pfp: {
-        type: String,
     },
 });
 
