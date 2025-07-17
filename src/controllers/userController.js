@@ -5,18 +5,14 @@ const JWT = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const recoveryPassMsg = require("../middlewares/recoverPass");
 
-// Obtener todos los usuarios
 const getAllUsers = async (req, res) => {
   try {
     console.log(req.query);
-
-    // Validar y ajustar `numeroPagina` para que sea un número entero positivo
     const numeroPagina = parseInt(req.query.numeroPagina, 10) || 0;
     const limite = parseInt(req.query.limite, 10) || 8;
 
-    // Asegurarse de que `numeroPagina` no sea menor que 0
     const pagina = Math.max(numeroPagina, 0);
-    const limiteValidado = Math.max(limite, 1); // Asegurarse de que el límite sea al menos 1
+    const limiteValidado = Math.max(limite, 1); 
 
     const [getUsers, count] = await Promise.all([
       UserModel.find()
@@ -34,9 +30,6 @@ const getAllUsers = async (req, res) => {
 };
 
 
-
-
-// Actualizar un usuario por ID
 const updateUser = async (req, res) => {
   try {
     const update = await UserModel.findByIdAndUpdate(req.params.id, req.body, {
@@ -56,7 +49,6 @@ const updateUser = async (req, res) => {
   }
 };
 
-// Eliminar un usuario por username
 const deleteUserByUsername = async (req, res) => {
   try {
     const user = await UserModel.findOneAndDelete({
@@ -76,7 +68,6 @@ const deleteUserByUsername = async (req, res) => {
   }
 };
 
-// Eliminar un usuario por ID
 const deleteUserById = async (req, res) => {
   try {
     const user = await UserModel.findByIdAndDelete(req.params.id);
@@ -94,12 +85,11 @@ const deleteUserById = async (req, res) => {
   }
 };
 
-// Registrar un nuevo usuario
+
 const registerUser = async (req, res) => {
   try {
     const newUser = new UserModel(req.body);
-    const salt = bcrypt.genSaltSync(10); // Aumentar la sal puede ser más seguro, ajusta según tu necesidad
-    newUser.password = bcrypt.hashSync(req.body.password, salt);
+    const salt = bcrypt.genSaltSync(10);     newUser.password = bcrypt.hashSync(req.body.password, salt);
 
     await newUser.save();
 
@@ -110,32 +100,31 @@ const registerUser = async (req, res) => {
   }
 };
 
-//hola
 
 
 // Iniciar sesión de usuario
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    // Verificar si el usuario existe por email
+    
     const user = await UserModel.findOne({ email });
     if (!user || !bcrypt.compareSync(password, user.password)) {
       return res.status(401).json({ msg: "Credenciales inválidas" });
     }
-    // Minimizar el payload del token
+    
     const payload = {
       idUser: user._id,
       role: user.role,
     };
     
-    // Crear el token
+    
     const token = JWT.sign(payload, process.env.JWT_SECRETPASS, { expiresIn: '1h' });
-    // Responder con el token y el rol del usuario
+    
     res.status(200).json({ 
       msg: "Usuario Logueado", 
       token, 
       role: user.role,
-      user: {  // Devuelve también los datos que necesitas en el frontend
+      user: {  
         name: user.name,
         email: user.email,
         idUser: user._id,
@@ -149,14 +138,14 @@ const loginUser = async (req, res) => {
   }
 };
 
-// Recuperación de contraseña
+
 const recoveryPass = async (req, res) => {
   try {
     const user = await UserModel.findOne({
       email: req.body.email,
     });
 
-    console.log(user); //borrar depsues
+    
 
     const payload = {
       user: {
@@ -179,7 +168,6 @@ const recoveryPass = async (req, res) => {
   }
 };
 
-// Cambiar la contraseña
 const changePass = async (req, res) => {
   try {
     console.log(req.body);
@@ -196,7 +184,7 @@ const changePass = async (req, res) => {
   }
 };
 
-// Obtener todos los turnos de un usuario
+
 const getUserAppointments = async (req, res) => {
   try {
     const userId = req.params.id;
@@ -214,7 +202,6 @@ const getUserAppointments = async (req, res) => {
   }
 };
 
-// Obtener todos los turnos asignados a un médico
 const getMedicoAppointments = async (req, res) => {
   try {
     const medicoId = req.params.id;
@@ -239,10 +226,10 @@ const getAllMedicos = async (req, res) => {
     const numeroPagina = parseInt(req.query.numeroPagina, 10) || 0;
     const limite = parseInt(req.query.limite, 10) || 8;
 
-    // Busca todos los usuarios con el rol "medico"
+    
     const [medicos, count] = await Promise.all([
-      UserModel.find({ role: "medico" })  // Búsqueda insensible a mayúsculas
-        .select('-password')  // Excluir la contraseña
+      UserModel.find({ role: "medico" })  
+        .select('-password')  
         .skip(numeroPagina * limite)
         .limit(limite),
       UserModel.countDocuments({ role: "medico" })
@@ -260,18 +247,18 @@ const getAllMedicos = async (req, res) => {
   }
 };
 
-//Metodo para cambiar el role del usuario - (USADO SOLO POR UN ADMIN)
+
 const changeUserRole = async (req, res) => {
   try {
     const { id } = req.params;
     const { role } = req.body;
 
-    // Validar que el rol sea válido (user o medico)
+    
     if (!['usuario', 'medico'].includes(role)) {
       return res.status(400).json({ msg: 'Rol inválido' });
     }
 
-    // Actualizar el rol del usuario
+
     const updatedUser = await UserModel.findByIdAndUpdate(
       id,
       { role },
@@ -301,8 +288,8 @@ module.exports = {
   loginUser,
   recoveryPass,
   changePass,
-  getUserAppointments, // Nuevo método para obtener los turnos de un usuario
-  getMedicoAppointments, // Nuevo método para obtener los turnos de un médico
+  getUserAppointments,
+  getMedicoAppointments, 
   getAllMedicos,
   changeUserRole,
 };
