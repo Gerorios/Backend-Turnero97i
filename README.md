@@ -3,7 +3,6 @@
 **ProSalud** es un proyecto orientado a la gestión de turnos médicos y estudios de diagnóstico, que permite a los pacientes agendar citas en línea y a los médicos aceptar o rechazar solicitudes de forma remota. Está diseñado para escalabilidad futura..
 
 ## Tecnologías
-
 * **Node.js**
 * **Express.js**
 * **MongoDB**
@@ -60,6 +59,4 @@ JWT_SECRETPASS=unaClaveSecreta
 * Mercedes Magali Navarro
 * Gonzalo Martínez
 
----
 
-¡Gracias por usar ProSalud Backend! Cualquier duda o contribución es bienvenida.
