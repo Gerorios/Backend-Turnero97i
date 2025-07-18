@@ -22,7 +22,7 @@ class Server {
     this.app.use(express.urlencoded({ extended: true }));
     
     const corsOptions = {
-      origin: "http://localhost:5173", // Reemplaza con el origen correcto de tu frontend
+      origin: "https://prosalud97i.netlify.app/", // Reemplaza con el origen correcto de tu frontend
       credentials: true, 
     };
 
