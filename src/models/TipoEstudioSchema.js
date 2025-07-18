@@ -10,7 +10,7 @@ const TipoEstudioSchema = new Schema({
     type: String,
     required: true,
   },
-  // Otros campos relevantes para una sucursal
+  
 });
 
 const BranchModel = model("TipoEstudio", TipoEstudioSchema);

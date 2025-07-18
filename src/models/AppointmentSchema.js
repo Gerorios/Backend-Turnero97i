@@ -27,7 +27,7 @@ const AppointmentSchema = new Schema({
   estado: { 
     type: String,
      enum: ['pendiente', 'aceptado', 'rechazado'],
-      default: 'pendiente' }, // Para manejar el estado de las citas
+      default: 'pendiente' }, 
 }, { timestamps: true });
 
 const AppointmentModel = model("Appointment", AppointmentSchema);

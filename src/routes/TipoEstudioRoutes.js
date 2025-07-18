@@ -10,17 +10,9 @@ const {
 
 
 router.get('/tipo-estudios', getTipoEstudio);
-
-
 router.get('/tipo-estudios/:estudio', getOneTipoEstudio);
-
-
 router.post('/tipo-estudios', createTipoEstudio);
-
-
 router.put('/tipo-estudios/:estudio', updateTipoEstudio);
-
-
 router.delete('/tipo-estudios/:estudio', deleteTipoEstudio);
 
 module.exports = router;

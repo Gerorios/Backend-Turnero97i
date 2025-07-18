@@ -4,9 +4,9 @@ const AppointmentModel = require("../models/AppointmentSchema");
 const getAllAppointments = async (req, res) => {
   try {
     const appointments = await AppointmentModel.find()
-      .populate("user", "name last_name email phone_number")  // Popula información del usuario (paciente)
-      .populate("medico", "name last_name email")  // Popula información del médico (desde el modelo "User")
-      .populate("tipoEstudio", "name");  // Popula información sobre el tipo de estudio
+      .populate("user", "name last_name email phone_number")  
+      .populate("medico", "name last_name email")  
+      .populate("tipoEstudio", "name");  
 
     res.status(200).json({ msg: "All appointments", appointments: appointments });
   } catch (error) {
@@ -16,7 +16,6 @@ const getAllAppointments = async (req, res) => {
 };
 
 
-// Obtener una cita por ID
 const getAppointmentById = async (req, res) => {
   try {
     const appointment = await AppointmentModel.findById(req.params.id)
@@ -35,23 +34,23 @@ const getAppointmentById = async (req, res) => {
   }
 };
 
-// Crear una nueva cita
+
 const createAppointment = async (req, res) => {
   try {
-    console.log(req.body); // Verificar qué datos están llegando desde el front
+    console.log(req.body); 
 
     const newAppointment = new AppointmentModel(req.body);
     await newAppointment.save();
 
     res.status(201).json({ msg: "Appointment created successfully", newAppointment });
   } catch (error) {
-    console.log(error);  // Asegúrate de ver el error exacto en la consola
+    console.log(error); 
     res.status(500).json({ msg: "Error: Server", error });
   }
 };
 
 
-// Actualizar una cita por ID
+
 const updateAppointment = async (req, res) => {
   try {
     const updatedAppointment = await AppointmentModel.findByIdAndUpdate(
@@ -71,7 +70,7 @@ const updateAppointment = async (req, res) => {
   }
 };
 
-// Eliminar una cita por ID
+
 const deleteAppointment = async (req, res) => {
   try {
     const deletedAppointment = await AppointmentModel.findByIdAndDelete(req.params.id);
@@ -87,10 +86,10 @@ const deleteAppointment = async (req, res) => {
   }
 };
 
-//Controlador para aceptar/rechazar citas
+
 const updateAppointmentStatus = async (req, res) => {
   const { id } = req.params;
-  const { estado } = req.body; // 'aceptado' o 'rechazado'
+  const { estado } = req.body; 
 
   if (!['aceptado', 'rechazado'].includes(estado)) {
     return res.status(400).json({ msg: "Estado no válido" });
@@ -110,7 +109,31 @@ const updateAppointmentStatus = async (req, res) => {
   }
 };
 
-// Exportar los controladores
+const getMyAppointments = async (req, res) => {
+  try {
+    const userId = req.idUser;              
+    const appointments = await AppointmentModel.find({ user: userId })
+      .populate("tipoEstudio", "name")
+      .populate("medico", "name last_name");
+    return res.status(200).json({ appointments });
+  } catch (error) {
+    console.error("Error fetching my appointments:", error);
+    return res.status(500).json({ msg: "Error: Server", error });
+  }
+};
+const getAppointmentsByMedico = async (req, res) => {
+  try {
+    const medicoId = req.idUser;    
+    const appointments = await AppointmentModel.find({ medico: medicoId })
+      .populate("user", "name last_name email phone_number")
+      .populate("tipoEstudio", "name");
+    return res.status(200).json({ appointments });
+  } catch (error) {
+    console.error("Error fetching appointments for medico:", error);
+    return res.status(500).json({ msg: "Error: Server", error });
+  }
+};
+
 module.exports = {
   getAllAppointments,
   getAppointmentById,
@@ -118,4 +141,6 @@ module.exports = {
   updateAppointment,
   deleteAppointment,
   updateAppointmentStatus,
+  getMyAppointments,
+  getAppointmentsByMedico
 };
