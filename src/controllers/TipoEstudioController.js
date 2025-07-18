@@ -47,7 +47,7 @@ const createTipoEstudio = async (req, res) => {
   }
 };
 
-// Actualizar un tipo de estudio
+
 const updateTipoEstudio = async (req, res) => {
   const { name } = req.params;
   const { descripcion } = req.body;
@@ -71,7 +71,6 @@ const updateTipoEstudio = async (req, res) => {
   }
 };
 
-// Eliminar un tipo de estudio
 const deleteTipoEstudio = async (req, res) => {
   const { name } = req.params;
   try {

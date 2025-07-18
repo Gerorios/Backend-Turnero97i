@@ -4,7 +4,7 @@ const AppointmentModel = require("../models/AppointmentSchema");
 const getAllAppointments = async (req, res) => {
   try {
     const appointments = await AppointmentModel.find()
-      .populate("user", "name last_name email")  // Popula información del usuario (paciente)
+      .populate("user", "name last_name email phone_number")  // Popula información del usuario (paciente)
       .populate("medico", "name last_name email")  // Popula información del médico (desde el modelo "User")
       .populate("tipoEstudio", "name");  // Popula información sobre el tipo de estudio
 

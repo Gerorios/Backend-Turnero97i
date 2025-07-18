@@ -1,6 +1,6 @@
 const UserModel = require("../models/UserSchema");
-const AppointmentModel = require("../models/AppointmentSchema"); // Importamos el modelo de Appointment
-const TipoEstudioModel = require("../models/TipoEstudioSchema"); // Importamos el modelo de TipoEstudio
+const AppointmentModel = require("../models/AppointmentSchema"); 
+const TipoEstudioModel = require("../models/TipoEstudioSchema"); 
 const JWT = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const recoveryPassMsg = require("../middlewares/recoverPass");
@@ -89,7 +89,8 @@ const deleteUserById = async (req, res) => {
 const registerUser = async (req, res) => {
   try {
     const newUser = new UserModel(req.body);
-    const salt = bcrypt.genSaltSync(10);     newUser.password = bcrypt.hashSync(req.body.password, salt);
+    const salt = bcrypt.genSaltSync(10);
+    newUser.password = bcrypt.hashSync(req.body.password, salt);
 
     await newUser.save();
 
